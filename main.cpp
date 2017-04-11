@@ -14,6 +14,11 @@ int main()
         return EXIT_FAILURE;
     sf::Sprite sprite(texture);
 
+    sf::Texture textureBall;
+    if (!textureBall.loadFromFile("ball.png"))
+        return EXIT_FAILURE;
+    sf::Sprite ball(textureBall);
+
     // Create the left paddle
     sf::RectangleShape leftPaddle;
     leftPaddle.setSize(paddleSize - sf::Vector2f(3, 3));
@@ -22,6 +27,14 @@ int main()
     leftPaddle.setFillColor(sf::Color(255, 255, 51));
     leftPaddle.setOrigin(paddleSize / 2.f);
 
+    // Create the right paddle
+    sf::RectangleShape rightPaddle;
+    rightPaddle.setSize(paddleSize - sf::Vector2f(3, 3));
+    rightPaddle.setOutlineThickness(3);
+    rightPaddle.setOutlineColor(sf::Color::Black);
+    rightPaddle.setFillColor(sf::Color(255, 0, 0));
+    rightPaddle.setOrigin(paddleSize / 2.f);
+
     // Load a music to play
     sf::Music music;
     if (!music.openFromFile("music.wav"))
@@ -29,7 +42,9 @@ int main()
     // Play the music
     //music.play();
 
-    leftPaddle.setPosition(100,660);
+    leftPaddle.setPosition(100,389);
+    rightPaddle.setPosition(928,389);
+    ball.setPosition(497,380);
 
     // Start the game loop
     while (window.isOpen())
@@ -45,16 +60,26 @@ int main()
         }
 
         // Move the player's paddle
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && 
         	leftPaddle.getPosition().y > 110)
         {
             leftPaddle.move(0.f, -1.f);
         }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
         	leftPaddle.getPosition().y < 660)
         {
         	leftPaddle.move(0.f, 1.f);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && 
+        	rightPaddle.getPosition().y > 110)
+        {
+            rightPaddle.move(0.f, -1.f);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+        	rightPaddle.getPosition().y < 660)
+        {
+        	rightPaddle.move(0.f, 1.f);
         }
 
         // Clear screen
@@ -62,7 +87,9 @@ int main()
         // Draw the sprite
         window.draw(sprite);
 
+        window.draw(ball);
         window.draw(leftPaddle);
+        window.draw(rightPaddle);
 
         // Update the window
         window.display();
