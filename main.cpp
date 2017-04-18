@@ -7,7 +7,7 @@ int main()
 {
 	sf::Vector2f paddleSize(25, 100);
 	float ballAngle = 0.f; // to be changed later
-	bool right = true;
+	bool right = false;
 	const float pi = 3.14159f;
 
     // Create the main window
@@ -92,6 +92,7 @@ int main()
         else
         	ball.move(-std::cos(ballAngle), -std::sin(ballAngle));
 
+        //hit the ball with the right paddle
         if(ball.getPosition().x > 900){
         	//right = false;
 	        if(rightPaddle.getPosition().y - ball.getPosition().y  >= 10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 30){
@@ -113,6 +114,31 @@ int main()
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= -30 && rightPaddle.getPosition().y - ball.getPosition().y  <= -11){
 	        	printf("Hasta abajo\n");
 	        	ballAngle = (2*pi)/3;
+	        }
+        }
+
+        //hit the ball with the left paddle
+        if(ball.getPosition().x < 100){
+        	//right = false;
+	        if(leftPaddle.getPosition().y - ball.getPosition().y  >= 10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 30){
+	        	printf("En medio\n");
+	        	ballAngle = pi;
+	        }
+	    	else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 31 && leftPaddle.getPosition().y - ball.getPosition().y  <= 50){
+	        	printf("Arriba\n");
+	        	ballAngle = (5*pi)/6;
+	    	}
+	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 9){
+	        	printf("Abajo L\n");
+	        	ballAngle = -(5*pi)/6;
+	        }
+	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 51 && leftPaddle.getPosition().y - ball.getPosition().y  <= 70){
+	        	printf("Hasta arriba\n");
+	        	ballAngle = (2*pi)/3;
+	        }
+	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -30 && leftPaddle.getPosition().y - ball.getPosition().y  <= -11){
+	        	printf("Hasta abajo\n");
+	        	ballAngle = -(2*pi)/3;
 	        }
 	        else{
 	        	printf("Nop\n");
