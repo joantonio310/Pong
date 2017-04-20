@@ -2,6 +2,18 @@
 #include <SFML/Graphics.hpp>
 #include <stdlib.h>
 #include <cmath>
+#include <string> 
+#include <sstream>
+
+namespace patch
+{
+    template < typename T > std::string to_string( const T& n )
+    {
+        std::ostringstream stm ;
+        stm << n ;
+        return stm.str() ;
+    }
+} 
 
 int main()
 {
@@ -11,6 +23,32 @@ int main()
 	bool turnRight = true;
 	int counterLeft = 0;
 	int counterRight = 0;
+
+	//put the letters for the scoreboard
+	sf::Font font;
+	if (!font.loadFromFile("arial.ttf"))
+	{
+	    // error...
+	}
+
+	sf::Text textLeft;
+	// select the font
+	textLeft.setFont(font); // font is a sf::Font
+	// set the string to display
+	textLeft.setString("Goles: 0");
+	// set the character size
+	textLeft.setCharacterSize(40); // in pixels, not points!
+	// set the color
+	textLeft.setColor(sf::Color::White);
+	// set the text style
+	textLeft.setStyle(sf::Text::Bold);
+
+	sf::Text textRight;
+	textRight.setFont(font); // font is a sf::Font
+	textRight.setString("Goles: 0");
+	textRight.setCharacterSize(40); // in pixels, not points!
+	textRight.setColor(sf::Color::White);
+	textRight.setStyle(sf::Text::Bold);
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(1024, 765), "Pong");
@@ -24,6 +62,18 @@ int main()
     if (!textureBall.loadFromFile("ball.png"))
         return EXIT_FAILURE;
     sf::Sprite ball(textureBall);
+
+    //set the America symbol
+    sf::Texture textureAmerica;
+    if (!textureAmerica.loadFromFile("america.png"))
+        return EXIT_FAILURE;
+    sf::Sprite america(textureAmerica);
+
+    //set the Chivas symbol
+    sf::Texture textureChivas;
+    if (!textureChivas.loadFromFile("chivas.png"))
+        return EXIT_FAILURE;
+    sf::Sprite chivas(textureChivas);
 
     // Create the left paddle
     sf::RectangleShape leftPaddle;
@@ -51,6 +101,10 @@ int main()
     leftPaddle.setPosition(100,389);
     rightPaddle.setPosition(928,389);
     ball.setPosition(497,380);
+    america.setPosition(0,0);
+    chivas.setPosition(950,0);
+    textLeft.setPosition(80,0);
+    textRight.setPosition(750,0);
 
     // Start the game loop
     while (window.isOpen())
@@ -125,7 +179,7 @@ int main()
 	        	turnRight = true;
 	        	ballAngle = 0.f;
 	        }
-	        printf("Counter left %d \t Counter right %d\n", counterLeft, counterRight);
+	        textLeft.setString("Goles: " + patch::to_string(counterLeft));
         }
 
         //hit the ball with the left paddle
@@ -162,7 +216,7 @@ int main()
 	        	turnRight = true;
 	        	ballAngle = 0.f;
 	        }
-	        printf("Counter left %d \t Counter right %d\n", counterLeft, counterRight);
+	        textRight.setString("Goles: " + patch::to_string(counterRight));
         }
 
         //hit the top of the table
@@ -183,8 +237,12 @@ int main()
         window.draw(sprite);
 
         window.draw(ball);
+        window.draw(america);
+        window.draw(chivas);
         window.draw(leftPaddle);
         window.draw(rightPaddle);
+        window.draw(textLeft);
+        window.draw(textRight);
 
         // Update the window
         window.display();
