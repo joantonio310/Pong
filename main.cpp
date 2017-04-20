@@ -7,8 +7,10 @@ int main()
 {
 	sf::Vector2f paddleSize(25, 100);
 	float ballAngle = 0.f; // to be changed later
-	bool right = false;
 	const float pi = 3.14159f;
+	bool turnRight = true;
+	int counterLeft = 0;
+	int counterRight = 0;
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(1024, 765), "Pong");
@@ -87,62 +89,92 @@ int main()
         }
 
         //move the ball
-        if(right)
-        	ball.move(std::cos(ballAngle), std::sin(ballAngle));
-        else
-        	ball.move(-std::cos(ballAngle), -std::sin(ballAngle));
+    	ball.move(std::cos(ballAngle), std::sin(ballAngle));
 
         //hit the ball with the right paddle
-        if(ball.getPosition().x > 900){
-        	//right = false;
+        if(ball.getPosition().x > 900 && turnRight){
+        	turnRight = false;
 	        if(rightPaddle.getPosition().y - ball.getPosition().y  >= 10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 30){
 	        	printf("En medio\n");
-	        	ballAngle = 0.f;
+	        	//ballAngle = 0.f;
+	        	ballAngle = pi;
 	        }
 	    	else if(rightPaddle.getPosition().y - ball.getPosition().y  >= 31 && rightPaddle.getPosition().y - ball.getPosition().y  <= 50){
 	        	printf("Arriba\n");
-	        	ballAngle = -(5*pi)/6;
+	        	//ballAngle = -(5*pi)/6;
+	        	ballAngle = (7*pi)/6;
 	    	}
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= -10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 9){
 	        	printf("Abajo\n");
+	        	//ballAngle = (5*pi)/6;
 	        	ballAngle = (5*pi)/6;
 	        }
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= 51 && rightPaddle.getPosition().y - ball.getPosition().y  <= 70){
 	        	printf("Hasta arriba\n");
-	        	ballAngle = -(2*pi)/3;
+	        	//ballAngle = -(2*pi)/3;
+	        	ballAngle = (2*pi)/3;
 	        }
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= -30 && rightPaddle.getPosition().y - ball.getPosition().y  <= -11){
 	        	printf("Hasta abajo\n");
-	        	ballAngle = (2*pi)/3;
+	        	//ballAngle = (2*pi)/3;
+	        	ballAngle = (4*pi)/3;
 	        }
+	        else{
+	        	counterLeft++;
+	        	ball.setPosition(497,380);
+	        	turnRight = true;
+	        	ballAngle = 0.f;
+	        }
+	        printf("Counter left %d \t Counter right %d\n", counterLeft, counterRight);
         }
 
         //hit the ball with the left paddle
-        if(ball.getPosition().x < 100){
-        	//right = false;
+        if(ball.getPosition().x < 100 && !turnRight){
+        	turnRight = true;
 	        if(leftPaddle.getPosition().y - ball.getPosition().y  >= 10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 30){
 	        	printf("En medio\n");
-	        	ballAngle = pi;
+	        	//ballAngle = pi;
+	        	ballAngle = 0.f;
 	        }
 	    	else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 31 && leftPaddle.getPosition().y - ball.getPosition().y  <= 50){
 	        	printf("Arriba\n");
-	        	ballAngle = (5*pi)/6;
+	        	//ballAngle = (5*pi)/6;
+	   			ballAngle = -(pi)/6;
 	    	}
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 9){
 	        	printf("Abajo L\n");
-	        	ballAngle = -(5*pi)/6;
+	        	//ballAngle = -(5*pi)/6;
+	        	ballAngle = -(11*pi)/6;
 	        }
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 51 && leftPaddle.getPosition().y - ball.getPosition().y  <= 70){
 	        	printf("Hasta arriba\n");
-	        	ballAngle = (2*pi)/3;
+	        	//ballAngle = (2*pi)/3;
+	        	ballAngle = -(pi)/3;
 	        }
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -30 && leftPaddle.getPosition().y - ball.getPosition().y  <= -11){
 	        	printf("Hasta abajo\n");
-	        	ballAngle = -(2*pi)/3;
+	        	//ballAngle = -(2*pi)/3;
+	        	ballAngle = -(5*pi)/3;
 	        }
 	        else{
-	        	printf("Nop\n");
+	        	counterRight++;
+	        	ball.setPosition(497,380);
+	        	turnRight = true;
+	        	ballAngle = 0.f;
 	        }
+	        printf("Counter left %d \t Counter right %d\n", counterLeft, counterRight);
+        }
+
+        //hit the top of the table
+        if(ball.getPosition().y < 55){
+        	printf("fuera\n");
+        	ballAngle *= -1;
+        }
+
+    	//hit the bottom of the table
+        if(ball.getPosition().y > 675){
+        	printf("fuera\n");
+        	ballAngle *= -1;
         }
 
         // Clear screen
