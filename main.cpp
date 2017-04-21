@@ -4,6 +4,7 @@
 #include <cmath>
 #include <string> 
 #include <sstream>
+#include <ctime>
 
 namespace patch
 {
@@ -17,6 +18,8 @@ namespace patch
 
 int main()
 {
+	std::srand(static_cast<unsigned int>(std::time(NULL)));
+
 	sf::Vector2f paddleSize(25, 100);
 	float ballAngle = 0.f; // to be changed later
 	const float pi = 3.14159f;
@@ -100,7 +103,7 @@ int main()
 
     leftPaddle.setPosition(100,389);
     rightPaddle.setPosition(928,389);
-    ball.setPosition(497,380);
+    ball.setPosition(497,rand() % 620 + 60);
     america.setPosition(0,0);
     chivas.setPosition(950,0);
     textLeft.setPosition(80,0);
@@ -145,39 +148,33 @@ int main()
         //move the ball
     	ball.move(std::cos(ballAngle), std::sin(ballAngle));
 
-        //hit the ball with the right paddle
+                //hit the ball with the right paddle
         if(ball.getPosition().x > 900 && turnRight){
         	turnRight = false;
 	        if(rightPaddle.getPosition().y - ball.getPosition().y  >= 10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 30){
 	        	printf("En medio\n");
-	        	//ballAngle = 0.f;
 	        	ballAngle = pi;
 	        }
 	    	else if(rightPaddle.getPosition().y - ball.getPosition().y  >= 31 && rightPaddle.getPosition().y - ball.getPosition().y  <= 50){
 	        	printf("Arriba\n");
-	        	//ballAngle = -(5*pi)/6;
 	        	ballAngle = (7*pi)/6;
 	    	}
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= -10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 9){
 	        	printf("Abajo\n");
-	        	//ballAngle = (5*pi)/6;
 	        	ballAngle = (5*pi)/6;
 	        }
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= 51 && rightPaddle.getPosition().y - ball.getPosition().y  <= 70){
 	        	printf("Hasta arriba\n");
-	        	//ballAngle = -(2*pi)/3;
 	        	ballAngle = (2*pi)/3;
 	        }
 	        else if(rightPaddle.getPosition().y - ball.getPosition().y  >= -30 && rightPaddle.getPosition().y - ball.getPosition().y  <= -11){
 	        	printf("Hasta abajo\n");
-	        	//ballAngle = (2*pi)/3;
 	        	ballAngle = (4*pi)/3;
 	        }
 	        else{
 	        	counterLeft++;
-	        	ball.setPosition(497,380);
-	        	turnRight = true;
-	        	ballAngle = 0.f;
+	        	ball.setPosition(899,rand() % 620 + 60);
+	        	ballAngle = pi;
 	        }
 	        textLeft.setString("Goles: " + patch::to_string(counterLeft));
         }
@@ -187,33 +184,27 @@ int main()
         	turnRight = true;
 	        if(leftPaddle.getPosition().y - ball.getPosition().y  >= 10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 30){
 	        	printf("En medio\n");
-	        	//ballAngle = pi;
 	        	ballAngle = 0.f;
 	        }
 	    	else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 31 && leftPaddle.getPosition().y - ball.getPosition().y  <= 50){
 	        	printf("Arriba\n");
-	        	//ballAngle = (5*pi)/6;
 	   			ballAngle = -(pi)/6;
 	    	}
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -10 && leftPaddle.getPosition().y - ball.getPosition().y  <= 9){
 	        	printf("Abajo L\n");
-	        	//ballAngle = -(5*pi)/6;
 	        	ballAngle = -(11*pi)/6;
 	        }
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= 51 && leftPaddle.getPosition().y - ball.getPosition().y  <= 70){
 	        	printf("Hasta arriba\n");
-	        	//ballAngle = (2*pi)/3;
 	        	ballAngle = -(pi)/3;
 	        }
 	        else if(leftPaddle.getPosition().y - ball.getPosition().y  >= -30 && leftPaddle.getPosition().y - ball.getPosition().y  <= -11){
 	        	printf("Hasta abajo\n");
-	        	//ballAngle = -(2*pi)/3;
 	        	ballAngle = -(5*pi)/3;
 	        }
 	        else{
 	        	counterRight++;
-	        	ball.setPosition(497,380);
-	        	turnRight = true;
+	        	ball.setPosition(101,rand() % 640 + 60);
 	        	ballAngle = 0.f;
 	        }
 	        textRight.setString("Goles: " + patch::to_string(counterRight));
