@@ -25,6 +25,8 @@ int main()
 	const float pi = 3.14159f;
 	bool turnRight = true;
     bool isPlaying = true;
+    bool isMenu = true;
+    bool arrowLeft = true;
 	int counterLeft = 0;
 	int counterRight = 0;
 
@@ -56,6 +58,13 @@ int main()
 	textRight.setColor(sf::Color::White);
 	textRight.setStyle(sf::Text::Bold);
 
+    //scoreboard chivas
+    sf::Text headerMenu;
+    headerMenu.setFont(font); // font is a sf::Font
+    headerMenu.setString("Jugar contra");
+    headerMenu.setCharacterSize(100); // in pixels, not points!
+    headerMenu.setColor(sf::Color::Green);
+    headerMenu.setStyle(sf::Text::Bold);
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(1024, 765), "Pong");
@@ -64,6 +73,28 @@ int main()
     if (!texture.loadFromFile("soccerField.jpeg"))
         return EXIT_FAILURE;
     sf::Sprite sprite(texture);
+
+    // Load a sprite to display like menu
+    sf::Texture textureMenu;
+    if (!textureMenu.loadFromFile("menu.jpg"))
+        return EXIT_FAILURE;
+    sf::Sprite menu(textureMenu);
+
+    sf::Texture texturePC;
+    if (!texturePC.loadFromFile("pc.png"))
+        return EXIT_FAILURE;
+    sf::Sprite pc(texturePC);
+
+    sf::Texture textureUser;
+    if (!textureUser.loadFromFile("user.png"))
+        return EXIT_FAILURE;
+    sf::Sprite user(textureUser);
+
+    sf::Texture textureArrow;
+    if (!textureArrow.loadFromFile("arrow.png"))
+        return EXIT_FAILURE;
+    sf::Sprite arrow(textureArrow);
+
 
     sf::Texture textureBall;
     if (!textureBall.loadFromFile("ball.png"))
@@ -118,6 +149,10 @@ int main()
     textLeft.setPosition(80,0);
     textRight.setPosition(750,0);
     pause.setPosition(392,291);
+    headerMenu.setPosition(200,100);
+    pc.setPosition(277, 300);
+    user.setPosition(618, 300);
+    arrow.setPosition(309,450);
 
     // Start the game loop
     while (window.isOpen())
@@ -131,6 +166,28 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
+            //put menu
+            if ((event.type == sf::Event::KeyPressed) && ((event.key.code == sf::Keyboard::Left) || (event.key.code == sf::Keyboard::Right)))
+            {   
+                if(arrowLeft){
+                    arrowLeft = false;
+                    arrow.setPosition(650,450);
+                }
+                else{
+                    arrowLeft = true;
+                    arrow.setPosition(309,450);
+                }
+            }
+
+            //start game
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Return))
+            {   
+                if(!arrowLeft){
+                    isPlaying = true;
+                    isMenu = false;
+                }
+            }
+
             //put pause
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space))
             {   
@@ -141,7 +198,7 @@ int main()
             }
         }
 
-        if (isPlaying)
+        if (isPlaying && !isMenu)
         {
             // Move the player's paddle
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && 
@@ -169,7 +226,7 @@ int main()
             //move the ball
         	ball.move(std::cos(ballAngle), std::sin(ballAngle));
 
-                    //hit the ball with the right paddle
+            //hit the ball with the right paddle
             if(ball.getPosition().x > 900 && turnRight){
             	turnRight = false;
     	        if(rightPaddle.getPosition().y - ball.getPosition().y  >= 10 && rightPaddle.getPosition().y - ball.getPosition().y  <= 30){
@@ -246,19 +303,27 @@ int main()
 
         // Clear screen
         window.clear();
-        // Draw the sprite
-        window.draw(sprite);
-
-        window.draw(ball);
-        window.draw(america);
-        window.draw(chivas);
-        window.draw(leftPaddle);
-        window.draw(rightPaddle);
-        window.draw(textLeft);
-        window.draw(textRight);
+        if(isMenu){
+            window.draw(menu);
+            window.draw(headerMenu);
+            window.draw(pc);
+            window.draw(user);
+            window.draw(arrow);
+        }
+        else{
+            window.draw(sprite);
+            window.draw(ball);
+            window.draw(america);
+            window.draw(chivas);
+            window.draw(leftPaddle);
+            window.draw(rightPaddle);
+            window.draw(textLeft);
+            window.draw(textRight);
+        }
 
         if (!isPlaying)
             window.draw(pause);
+
 
         // Update the window
         window.display();
