@@ -182,10 +182,8 @@ int main()
             //start game
             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Return))
             {   
-                if(!arrowLeft){
-                    isPlaying = true;
-                    isMenu = false;
-                }
+                isPlaying = true;
+                isMenu = false;
             }
 
             //put pause
@@ -200,16 +198,30 @@ int main()
 
         if (isPlaying && !isMenu)
         {
-            // Move the player's paddle
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && 
-            	leftPaddle.getPosition().y > 110)
-            {
-                leftPaddle.move(0.f, -1.f);
+            if(!arrowLeft){
+                // Move the player's paddle
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && 
+                	leftPaddle.getPosition().y > 110)
+                {
+                    leftPaddle.move(0.f, -1.f);
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+                	leftPaddle.getPosition().y < 660)
+                {
+                	leftPaddle.move(0.f, 1.f);
+                }
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-            	leftPaddle.getPosition().y < 660)
-            {
-            	leftPaddle.move(0.f, 1.f);
+            else{
+                if(leftPaddle.getPosition().y > 110 && leftPaddle.getPosition().y < 660){
+                    if(leftPaddle.getPosition().y > ball.getPosition().y)
+                        leftPaddle.move(0.f, -1.f);
+                    if(leftPaddle.getPosition().y < ball.getPosition().y)
+                       leftPaddle.move(0.f, 1.f); 
+                }
+                else if(leftPaddle.getPosition().y <= 110)
+                    leftPaddle.move(0.f, 1.f);
+                else if(leftPaddle.getPosition().y >= 660)
+                    leftPaddle.move(0.f, -1.f);
             }
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && 
