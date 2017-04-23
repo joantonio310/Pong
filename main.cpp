@@ -26,6 +26,7 @@ int main()
 	bool turnRight = true;
     bool isPlaying = true;
     bool isMenu = true;
+    bool isGoal = false;
     bool arrowLeft = true;
 	int counterLeft = 0;
 	int counterRight = 0;
@@ -109,6 +110,11 @@ int main()
         return EXIT_FAILURE;
     sf::Sprite ball(textureBall);
 
+    sf::Texture textureGoal;
+    if (!textureGoal.loadFromFile("goal.jpg"))
+        return EXIT_FAILURE;
+    sf::Sprite goal(textureGoal);
+
     sf::Texture texturePause;
     if (!texturePause.loadFromFile("pausa.jpg"))
         return EXIT_FAILURE;
@@ -151,6 +157,7 @@ int main()
 
     leftPaddle.setPosition(100,389);
     rightPaddle.setPosition(928,389);
+    goal.setPosition(277,183);
     ball.setPosition(497,rand() % 630 + 60);
     america.setPosition(0,0);
     chivas.setPosition(950,0);
@@ -165,6 +172,7 @@ int main()
 
     time_t seconds;
     time_t start;
+    time_t timeGoal;
     int sec;
     int min;
 
@@ -211,7 +219,7 @@ int main()
             }
         }
 
-        if (isPlaying && !isMenu)
+        if (isPlaying && !isMenu && !isGoal)
         {
             if(!arrowLeft){
                 // Move the player's paddle
@@ -280,6 +288,10 @@ int main()
     	        	counterLeft++;
     	        	ball.setPosition(899,rand() % 620 + 60);
     	        	ballAngle = pi;
+                    isGoal = true;
+                    timeGoal = time (NULL);
+                    leftPaddle.setPosition(100,389);
+                    rightPaddle.setPosition(928,389);
     	        }
     	        textLeft.setString("Goles: " + patch::to_string(counterLeft));
             }
@@ -309,8 +321,12 @@ int main()
     	        }
     	        else{
     	        	counterRight++;
-    	        	ball.setPosition(101,rand() % 640 + 60);
+    	        	ball.setPosition(101,rand() % 620 + 60);
     	        	ballAngle = 0.f;
+                    isGoal = true;
+                    timeGoal = time (NULL);
+                    leftPaddle.setPosition(100,389);
+                    rightPaddle.setPosition(928,389);
     	        }
     	        textRight.setString("Goles: " + patch::to_string(counterRight));
             }
@@ -351,6 +367,11 @@ int main()
             sec = (seconds - start) % 60;
             textTime.setString(patch::to_string(min) + ":" + patch::to_string(sec));
             window.draw(textTime);
+            if(isGoal && seconds - timeGoal < 2){
+                window.draw(goal);
+            }
+            else
+                isGoal = false;
         }
 
         if (!isPlaying)
