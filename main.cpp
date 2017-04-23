@@ -58,6 +58,14 @@ int main()
 	textRight.setColor(sf::Color::White);
 	textRight.setStyle(sf::Text::Bold);
 
+    //set timer
+    sf::Text textTime;
+    textTime.setFont(font); // font is a sf::Font
+    textTime.setString("0:00");
+    textTime.setCharacterSize(40); // in pixels, not points!
+    textTime.setColor(sf::Color::White);
+    textTime.setStyle(sf::Text::Bold);
+
     //scoreboard chivas
     sf::Text headerMenu;
     headerMenu.setFont(font); // font is a sf::Font
@@ -148,11 +156,17 @@ int main()
     chivas.setPosition(950,0);
     textLeft.setPosition(80,0);
     textRight.setPosition(750,0);
+    textTime.setPosition(475,0);
     pause.setPosition(392,291);
     headerMenu.setPosition(200,100);
     pc.setPosition(277, 300);
     user.setPosition(618, 300);
     arrow.setPosition(309,450);
+
+    time_t seconds;
+    time_t start;
+    int sec;
+    int min;
 
     // Start the game loop
     while (window.isOpen())
@@ -184,6 +198,7 @@ int main()
             {   
                 isPlaying = true;
                 isMenu = false;
+                start = time (NULL);
             }
 
             //put pause
@@ -331,11 +346,15 @@ int main()
             window.draw(rightPaddle);
             window.draw(textLeft);
             window.draw(textRight);
+            seconds = time (NULL);
+            min = (seconds - start) / 60;
+            sec = (seconds - start) % 60;
+            textTime.setString(patch::to_string(min) + ":" + patch::to_string(sec));
+            window.draw(textTime);
         }
 
         if (!isPlaying)
             window.draw(pause);
-
 
         // Update the window
         window.display();
